@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+python-multipart
+scikit-learn
+pydantic-settings
+PyPDF2
+openai
+python-dotenv
