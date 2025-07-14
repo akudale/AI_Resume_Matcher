@@ -17,11 +17,6 @@ The AI Resume Matcher is a tool that helps you match resumes with a job descript
 - View the matching score for each resume.
 - See a detailed breakdown of the skills extracted from the job description and each resume, as well as the skills that match.
 
-## Screenshots
-
-*Screenshot of the main page with the job description and resume upload form.*
-
-*Screenshot of the results page with the matching scores and skills breakdown.*
 
 ## How to Run
 
