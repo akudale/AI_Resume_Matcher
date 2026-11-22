@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Pip Phonics Tutor</title>
+  <meta name="description" content="A talking, listening phonics tutor for 4-5 year olds.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Fredoka:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="confetti" aria-hidden="true"></div>
+
+  <header class="top">
+    <div class="brand"><span class="brand-pip">🦜</span><span>Pip Phonics</span></div>
+    <div class="top-right">
+      <span class="stars" title="Stars earned">⭐ <b id="star-count">0</b></span>
+      <button id="lessons-btn" class="icon-btn" aria-label="All lessons">📚<span class="btn-text">Lessons</span></button>
+      <button id="settings-btn" class="icon-btn" aria-label="Grown-up settings">⚙️</button>
+    </div>
+  </header>
+  <div class="bar"><div id="bar-fill"></div></div>
+
+  <main class="stage">
+    <section class="lesson-head">
+      <span id="level-chip" class="level-chip"></span>
+      <div>
+        <div id="lesson-num" class="lesson-num"></div>
+        <h1 id="lesson-title"></h1>
+      </div>
+      <ol class="steps">
+        <li class="step" data-step="learn">👀 Learn</li>
+        <li class="step" data-step="practice">🗣️ Say it</li>
+        <li class="step" data-step="quiz">🎮 Game</li>
+        <li class="step" data-step="done">⭐ Done</li>
+      </ol>
+    </section>
+
+    <section class="tutor">
+      <div id="pip" class="pip" aria-hidden="true">🦜</div>
+      <div class="bubble" aria-live="polite"><span id="bubble-text"></span></div>
+    </section>
+
+    <section class="board">
+      <div id="focus" class="focus"></div>
+      <div id="word" class="word" hidden></div>
+      <div id="sentence" class="sentence" hidden></div>
+      <div id="options" class="options" hidden></div>
+      <div id="dots" class="dots"></div>
+      <div id="cards" class="cards"></div>
+    </section>
+
+    <div id="heard" class="heard" hidden>🧒 <span id="heard-text"></span></div>
+  </main>
+
+  <footer class="controls">
+    <div class="buttons">
+      <button id="back" class="ctl" aria-label="Previous lesson">◀<span>Back</span></button>
+      <button id="repeat" class="ctl" aria-label="Repeat">🔁<span>Again</span></button>
+      <button id="mic" class="mic" aria-label="Tap and talk"><span class="mic-icon">🎤</span><span id="mic-label">Tap &amp; Talk</span></button>
+      <button id="next" class="ctl" aria-label="Next lesson">▶<span>Next</span></button>
+    </div>
+    <form id="type-form" class="type-form" autocomplete="off">
+      <input id="typed" placeholder="Grown-ups: type a question or answer…" aria-label="Type to Pip">
+      <button type="submit">Send</button>
+    </form>
+  </footer>
+
+  <div id="toast" class="toast" hidden></div>
+
+  <!-- Syllabus drawer -->
+  <div id="drawer" class="overlay" hidden>
+    <aside class="panel">
+      <div class="panel-head">
+        <h2>📚 All Lessons</h2>
+        <button id="drawer-close" class="icon-btn" aria-label="Close">✖</button>
+      </div>
+      <p class="hint">Tap any lesson, or just say <b>“lesson 12”</b>, <b>“level 3”</b> or <b>“teach me sh”</b>.</p>
+      <div id="syllabus"></div>
+    </aside>
+  </div>
+
+  <!-- Settings -->
+  <div id="settings" class="overlay" hidden>
+    <aside class="panel">
+      <div class="panel-head">
+        <h2>⚙️ Grown-up Settings</h2>
+        <button id="settings-close" class="icon-btn" aria-label="Close">✖</button>
+      </div>
+      <label class="field">Child's name <input id="set-name" maxlength="20"></label>
+      <label class="field">Accent
+        <select id="set-accent">
+          <option value="en-US">American English</option>
+          <option value="en-GB">British English</option>
+          <option value="en-IN">Indian English</option>
+          <option value="en-AU">Australian English</option>
+        </select>
+      </label>
+      <label class="field">Talking speed <input id="set-rate" type="range" min="0.6" max="1.2" step="0.05"></label>
+      <label class="check"><input id="set-auto" type="checkbox"> Listen automatically after each question</label>
+      <label class="check"><input id="set-ai" type="checkbox"> Use the AI brain for open questions</label>
+      <p id="ai-status" class="ai-status"></p>
+      <div class="voice-help">
+        <b>Things your child can say</b>
+        <ul>
+          <li>“Next” / “Go back” / “Again” / “Skip”</li>
+          <li>“Lesson 7”, “Level 3”, “Teach me sh”, “Magic e”, “Tricky words”</li>
+          <li>“Show me the lessons”, “Help”, “I don't know”</li>
+          <li>Questions: “What sound does B make?”, “How do you spell cat?”</li>
+        </ul>
+        <p>Keyboard: ← back · → next · Space to talk</p>
+      </div>
+      <button id="set-reset" class="danger">Reset all progress</button>
+    </aside>
+  </div>
+
+  <!-- Welcome -->
+  <div id="welcome" class="overlay welcome">
+    <div class="welcome-card">
+      <div class="welcome-pip">🦜</div>
+      <h2>Hi! I'm Pip!</h2>
+      <p>Let's learn letter sounds together.<br>I talk, and I listen to you!</p>
+      <button id="start" class="start">Let's Play ▶</button>
+      <p id="no-sr" class="small" hidden>Tip: for talking to Pip, open this in Chrome, Edge or Safari. You can still tap and type.</p>
+      <p class="small">Grown-ups: please allow the microphone when asked.</p>
+    </div>
+  </div>
+
+  <script src="syllabus.js"></script>
+  <script src="brain.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

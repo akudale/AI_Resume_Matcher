@@ -1,5 +1,7 @@
 # AI Resume Matcher
 
+> Also in this repo: **[Pip Phonics](phonics_tutor/README.md)**, an interactive voice phonics tutor for 4–5 year olds.
+
 ## Brief Intro
 
 The AI Resume Matcher is a tool that helps you match resumes with a job description. It uses AI to extract skills from both the job description and the resumes, and then calculates a matching score for each resume.

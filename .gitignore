@@ -6,3 +6,6 @@ backend/__pycache__/
 
 # Node
 frontend/node_modules
+
+# Phonics tutor
+phonics_tutor/__pycache__/
