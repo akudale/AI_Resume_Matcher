@@ -50,7 +50,7 @@
   let currentAudio = null;
   fetch('sounds/manifest.json')
     .then((r) => (r.ok ? r.json() : {}))
-    .then((m) => { clips = (m && m.files) || {}; })
+    .then((m) => { clips = (m && m.files) || {}; renderSoundboard(); })
     .catch(() => { clips = {}; });
 
   function playClip(id, token) {
@@ -914,6 +914,21 @@
     $('#voice-note').textContent = sel.value === 'claude'
       ? "With Claude's voice, your child taps the orange button to answer (the microphone and this voice can't be on together)."
       : 'Pip listens by itself after each question, no tapping needed. Voices named "Natural" or "Online" (in Edge and Chrome) sound most human.';
+  }
+
+  function renderSoundboard() {
+    const el = $('#soundboard');
+    if (!el) return;
+    el.innerHTML = '';
+    Object.entries(Syl.PHONEMES).forEach(([id, [sayText, ipa, example]]) => {
+      const b = document.createElement('button');
+      b.className = `sb${clips[id] ? '' : ' missing'}`;
+      b.innerHTML = '<b></b><span></span>';
+      b.querySelector('b').textContent = `/${ipa}/${clips[id] ? '' : ' ✱'}`;
+      b.querySelector('span').textContent = example;
+      b.onclick = () => { cancelSpeech(); say(`/${ipa}/ as in ${example}`, `{{${id}|${sayText}}}... ${example}.`); };
+      el.appendChild(b);
+    });
   }
 
   function setTalking(on) { $('#pip').classList.toggle('talking', on); }

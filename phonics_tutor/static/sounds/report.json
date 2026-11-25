@@ -1,0 +1,435 @@
+{
+ "s": {
+  "ok": true,
+  "from": "sˈʌn",
+  "where": "initial",
+  "heard": [
+   "s"
+  ],
+  "seconds": 0.27,
+  "voice": "af_heart"
+ },
+ "z": {
+  "ok": true,
+  "from": "zˈɪp",
+  "where": "initial",
+  "heard": [
+   "z"
+  ],
+  "seconds": 0.31,
+  "voice": "af_heart"
+ },
+ "f": {
+  "ok": true,
+  "from": "fˈæn",
+  "where": "initial",
+  "heard": [
+   "f"
+  ],
+  "seconds": 0.2,
+  "voice": "af_heart"
+ },
+ "v": {
+  "ok": true,
+  "from": "vˈɛst",
+  "where": "initial",
+  "heard": [
+   "v"
+  ],
+  "seconds": 0.14,
+  "voice": "af_heart"
+ },
+ "m": {
+  "ok": true,
+  "from": "mˈæp",
+  "where": "initial",
+  "heard": [
+   "m"
+  ],
+  "seconds": 0.17,
+  "voice": "af_heart"
+ },
+ "n": {
+  "ok": true,
+  "from": "nˈɛt",
+  "where": "initial",
+  "heard": [
+   "n"
+  ],
+  "seconds": 0.36,
+  "voice": "af_heart"
+ },
+ "l": {
+  "ok": true,
+  "from": "lˈɑɡ",
+  "where": "initial",
+  "heard": [
+   "l"
+  ],
+  "seconds": 0.16,
+  "voice": "af_heart"
+ },
+ "r": {
+  "ok": true,
+  "from": "ɹˈɪp",
+  "where": "initial",
+  "heard": [
+   "ɹ"
+  ],
+  "seconds": 0.2,
+  "voice": "af_heart"
+ },
+ "sh": {
+  "ok": true,
+  "from": "ʃˈɑp",
+  "where": "initial",
+  "heard": [
+   "ʃ"
+  ],
+  "seconds": 0.29,
+  "voice": "af_heart"
+ },
+ "th": {
+  "ok": true,
+  "from": "θˈʌm",
+  "where": "initial",
+  "heard": [
+   "θ"
+  ],
+  "seconds": 0.21,
+  "voice": "af_heart"
+ },
+ "ng": {
+  "ok": true,
+  "from": "ɹˈɪŋ",
+  "where": "final",
+  "heard": [
+   "ŋ"
+  ],
+  "seconds": 0.44,
+  "voice": "af_heart"
+ },
+ "h": {
+  "ok": true,
+  "from": "hˈæt",
+  "where": "initial",
+  "heard": [
+   "h"
+  ],
+  "seconds": 0.14,
+  "voice": "af_heart"
+ },
+ "w": {
+  "ok": true,
+  "from": "wˈɪɡ",
+  "where": "initial",
+  "heard": [
+   "w"
+  ],
+  "seconds": 0.14,
+  "voice": "af_heart"
+ },
+ "y": {
+  "ok": true,
+  "from": "jˈɛs",
+  "where": "initial",
+  "heard": [
+   "j"
+  ],
+  "seconds": 0.1,
+  "voice": "af_heart"
+ },
+ "t": {
+  "ok": true,
+  "from": "tˈɛn",
+  "where": "initial",
+  "heard": [
+   "t"
+  ],
+  "seconds": 0.08,
+  "voice": "af_heart"
+ },
+ "p": {
+  "ok": true,
+  "from": "pˈɪɡ",
+  "where": "initial",
+  "heard": [
+   "p"
+  ],
+  "seconds": 0.11,
+  "voice": "af_heart"
+ },
+ "k": {
+  "ok": true,
+  "from": "kˈæt",
+  "where": "initial",
+  "heard": [
+   "k"
+  ],
+  "seconds": 0.08,
+  "voice": "af_heart"
+ },
+ "b": {
+  "ok": true,
+  "from": "bˈæt",
+  "where": "initial",
+  "heard": [
+   "b"
+  ],
+  "seconds": 0.19,
+  "voice": "af_heart"
+ },
+ "d": {
+  "ok": true,
+  "from": "dˈɑɡ",
+  "where": "initial",
+  "heard": [
+   "d"
+  ],
+  "seconds": 0.2,
+  "voice": "af_heart"
+ },
+ "g": {
+  "ok": true,
+  "from": "ɡˈɛt",
+  "where": "initial",
+  "heard": [
+   "ɡ"
+  ],
+  "seconds": 0.21,
+  "voice": "af_heart"
+ },
+ "j": {
+  "ok": true,
+  "from": "ʤˈɛt",
+  "where": "initial",
+  "heard": [
+   "dʒ"
+  ],
+  "seconds": 0.24,
+  "voice": "af_heart"
+ },
+ "ch": {
+  "ok": true,
+  "from": "ʧˈɪp",
+  "where": "initial",
+  "heard": [
+   "tʃ"
+  ],
+  "seconds": 0.18,
+  "voice": "af_heart"
+ },
+ "ks": {
+  "ok": true,
+  "from": "bˈɑks",
+  "where": "final",
+  "heard": [
+   "k",
+   "s"
+  ],
+  "seconds": 0.32,
+  "voice": "af_heart"
+ },
+ "kw": {
+  "ok": true,
+  "from": "kwˈin",
+  "where": "initial",
+  "heard": [
+   "k",
+   "w"
+  ],
+  "seconds": 0.13,
+  "voice": "af_heart"
+ },
+ "a": {
+  "ok": true,
+  "from": "kˈæt",
+  "where": "cvc:k:t",
+  "heard": [
+   "k",
+   "æ",
+   "t"
+  ],
+  "seconds": 0.18,
+  "voice": "af_heart"
+ },
+ "e": {
+  "ok": true,
+  "from": "pˈɛt",
+  "where": "cvc:p:t",
+  "heard": [
+   "p",
+   "ɛ",
+   "t"
+  ],
+  "seconds": 0.18,
+  "voice": "af_heart"
+ },
+ "i": {
+  "ok": true,
+  "from": "pˈɪt",
+  "where": "cvc:p:t",
+  "heard": [
+   "p",
+   "ɪ",
+   "t"
+  ],
+  "seconds": 0.17,
+  "voice": "af_heart"
+ },
+ "o": {
+  "ok": true,
+  "from": "kˈɑt",
+  "where": "cvc:k:t",
+  "heard": [
+   "k",
+   "ɑː",
+   "t"
+  ],
+  "seconds": 0.14,
+  "voice": "af_heart"
+ },
+ "u": {
+  "ok": true,
+  "from": "kˈʌt",
+  "where": "cvc:k:t",
+  "heard": [
+   "k",
+   "ʌ",
+   "t"
+  ],
+  "seconds": 0.15,
+  "voice": "af_heart"
+ },
+ "ay": {
+  "ok": true,
+  "from": "tˈAk",
+  "where": "cvc:t:k",
+  "heard": [
+   "t",
+   "eɪ",
+   "k"
+  ],
+  "seconds": 0.21,
+  "voice": "af_heart"
+ },
+ "ee": {
+  "ok": true,
+  "from": "pˈit",
+  "where": "cvc:p:t",
+  "heard": [
+   "p",
+   "iː",
+   "t"
+  ],
+  "seconds": 0.21,
+  "voice": "af_heart"
+ },
+ "igh": {
+  "ok": true,
+  "from": "kˈIt",
+  "where": "cvc:k:t",
+  "heard": [
+   "k",
+   "aɪ",
+   "t"
+  ],
+  "seconds": 0.17,
+  "voice": "af_heart"
+ },
+ "oh": {
+  "ok": true,
+  "from": "pˈOk",
+  "where": "cvc:p:k",
+  "heard": [
+   "p",
+   "oʊ",
+   "k"
+  ],
+  "seconds": 0.22,
+  "voice": "af_heart"
+ },
+ "yoo": {
+  "ok": true,
+  "from": "jˈuː",
+  "where": "whole",
+  "heard": [
+   "j",
+   "uː"
+  ],
+  "seconds": 0.42,
+  "voice": "af_heart"
+ },
+ "oo": {
+  "ok": true,
+  "from": "tˈut",
+  "where": "cvc:t:t",
+  "heard": [
+   "t",
+   "uː",
+   "t"
+  ],
+  "seconds": 0.2,
+  "voice": "af_heart"
+ },
+ "ar": {
+  "ok": true,
+  "from": "pˈɑɹt",
+  "where": "cvc:p:t",
+  "heard": [
+   "p",
+   "ɑːɹ",
+   "t"
+  ],
+  "seconds": 0.19,
+  "voice": "af_heart"
+ },
+ "or": {
+  "ok": true,
+  "from": "kˈɔɹt",
+  "where": "cvc:k:t",
+  "heard": [
+   "k",
+   "ɔːɹ",
+   "t"
+  ],
+  "seconds": 0.21,
+  "voice": "af_heart"
+ },
+ "er": {
+  "ok": true,
+  "from": "hˈɜɹt",
+  "where": "cvc:h:t",
+  "heard": [
+   "h",
+   "ɜː",
+   "t"
+  ],
+  "seconds": 0.17,
+  "voice": "af_heart"
+ },
+ "ow": {
+  "ok": true,
+  "from": "pˈWt",
+  "where": "cvc:p:t",
+  "heard": [
+   "p",
+   "aʊ",
+   "t"
+  ],
+  "seconds": 0.17,
+  "voice": "af_heart"
+ },
+ "oy": {
+  "ok": true,
+  "from": "pˈYt",
+  "where": "cvc:p:t",
+  "heard": [
+   "p",
+   "oɪ",
+   "t"
+  ],
+  "seconds": 0.1,
+  "voice": "af_heart"
+ }
+}

@@ -20,24 +20,34 @@ children can tap the answers and grown-ups can type.
 ## What makes Pip feel like a real tutor
 
 - **A natural voice.** On the published claude.ai page Pip uses Claude's voice. When run locally, Pip picks the most human voice on the device, preferring the "Natural" / "Online" voices in Edge and Chrome. Grown-ups can choose a voice in ⚙️ settings.
-- **Real recorded letter sounds.** Each of the 40 phonics sounds plays from a recording in `static/sounds/` when one is there, and falls back to the voice when not (see below).
+- **Recorded letter sounds.** All 40 phonics sounds play from short clips instead of the voice guessing at "ssss" or "kuh" (see below).
 - **Hands-free.** Pip listens by itself after every question; it never listens while it is talking, so it doesn't hear itself. On the published page, Claude's voice and the microphone can't be on together, so with that voice the child taps the orange button to answer.
 - **Patient when the child is quiet.** After 10 seconds: "Take your time!" After 22: Pip shows how. After 40: "I'll wait right here."
 - **Feedback like a teacher.** *"You said **fun**! So close! **Sun** starts with **sss**."* Pip points out whether the start, middle or end sound was different.
 - **Memory.** *"Welcome back, Maya! Yesterday you learned the letter D. That's 3 days in a row! Remember D? That one was tricky."*
 - **Personality.** Praise varies (and celebrates "three in a row!" or trying again), Pip sometimes gets a picture wrong on purpose so the child can correct it, and it has a favourite food (crackers).
 
-## Adding the sound recordings
+## The sound recordings
 
-Pip needs one short clip per sound, named by the sound's id:
+`static/sounds/` holds a clip for each of the 40 phonics sounds, made with the open-source Kokoro voice
+(Apache-2.0) by `tools/make_sounds.py`. Voice models are bad at saying a sound on its own (they add a
+vowel: "s" becomes "s-ah"), so the tool makes the voice say real words and cuts the sound out:
+
+- **Consonants** come from the start or end of a word (*s* from "sun", *ng* from "ring"). A clip is kept
+  only if a phoneme recogniser hears exactly that one sound in it.
+- **Vowels** come from words like "cat" or "keep", where the vowel is the only voiced part, so it can be
+  cut exactly. The whole word must be recognised correctly first.
+
+`static/sounds/report.json` shows the source word and what was heard for each clip. Grown-ups can listen
+to all 40 under ⚙️ → *Listen to all 40 sounds*. To replace any clip with a human recording, save it with
+the same name (`python build_sounds.py --list` shows the names) and run `python build_sounds.py`.
+
+To regenerate (downloads ~1.6 GB of models from huggingface.co the first time):
 
 ```bash
-python build_sounds.py --list     # the 40 ids, e.g. s.mp3 /s/ as in sun, sh.mp3 /ʃ/ as in ship
-# copy the clips into static/sounds/, then:
-python build_sounds.py            # writes static/sounds/manifest.json
+pip install onnxruntime numpy soundfile    # plus ffmpeg on PATH
+python tools/make_sounds.py                # or: python tools/make_sounds.py s sh a
 ```
-
-Clips can be added a few at a time; any sound without one is spoken by the voice.
 
 ## How a lesson works
 
@@ -94,6 +104,7 @@ Keyboard: ← and → change lessons, Space starts listening.
 phonics_tutor/
 ├── server.py            FastAPI: serves the app + /api/chat (Claude) + /api/health
 ├── build_sounds.py      registers recordings in static/sounds/
+├── tools/make_sounds.py generates and checks the 40 sound clips
 ├── build_page.py        bundles the app into one page for publishing on claude.ai
 ├── static/
 │   ├── index.html       UI

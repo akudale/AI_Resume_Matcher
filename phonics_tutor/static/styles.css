@@ -155,6 +155,12 @@ button { font-family: inherit; cursor: pointer; color: inherit; }
 .check { display: flex; gap: 8px; align-items: center; }
 .ai-status, .voice-help { font-family: system-ui, sans-serif; font-size: .9rem; color: var(--muted); }
 .voice-help ul { padding-left: 18px; margin: 6px 0; }
+.soundboard-wrap summary { cursor: pointer; font-weight: 600; }
+.soundboard { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 6px; margin-top: 6px; }
+.sb { border: 2px solid var(--line); background: var(--card); border-radius: 12px; padding: 6px 4px; display: flex; flex-direction: column; align-items: center; font-family: var(--font-read); }
+.sb b { font-size: 1.1rem; }
+.sb span { font-size: .75rem; color: var(--muted); }
+.sb.missing { border-style: dashed; }
 .danger { border: 0; background: var(--red); color: #fff; border-radius: 14px; padding: 10px; font-weight: 600; margin-top: auto; }
 
 .welcome { justify-content: center; align-items: center; padding: 16px; }
