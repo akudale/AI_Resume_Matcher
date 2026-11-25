@@ -217,5 +217,31 @@
     return w.includes(key);
   }
 
-  return { LEVELS, LESSONS: lessons, SOUNDS, LONG_VOWEL, soundOut, wordHasKey };
+  /**
+   * The 40 phonemes Pip can play from a recording (static/sounds/<id>.mp3).
+   * id -> [how the voice says it as a fallback, IPA, example word].
+   */
+  const PHONEMES = {
+    s: ['ssss', 's', 'sun'], a: ['ah', 'æ', 'ant'], t: ['tuh', 't', 'tap'], p: ['puh', 'p', 'pig'],
+    i: ['ih', 'ɪ', 'insect'], n: ['nnnn', 'n', 'net'], m: ['mmmm', 'm', 'moon'], d: ['duh', 'd', 'dog'],
+    g: ['guh', 'ɡ', 'goat'], o: ['aw', 'ɒ', 'octopus'], k: ['kuh', 'k', 'cat'], e: ['eh', 'e', 'egg'],
+    u: ['uh', 'ʌ', 'up'], r: ['rrrr', 'r', 'rabbit'], h: ['huh', 'h', 'hat'], b: ['buh', 'b', 'ball'],
+    f: ['ffff', 'f', 'fish'], l: ['llll', 'l', 'lion'], j: ['juh', 'dʒ', 'jam'], v: ['vvvv', 'v', 'van'],
+    w: ['wuh', 'w', 'web'], ks: ['ks', 'ks', 'box'], y: ['yuh', 'j', 'yak'], z: ['zzzz', 'z', 'zip'],
+    kw: ['kwuh', 'kw', 'queen'], sh: ['shhh', 'ʃ', 'ship'], ch: ['chuh', 'tʃ', 'chick'],
+    th: ['thh', 'θ', 'thumb'], ng: ['ng', 'ŋ', 'ring'], ay: ['ay', 'eɪ', 'rain'], ee: ['ee', 'iː', 'tree'],
+    igh: ['eye', 'aɪ', 'kite'], oh: ['oh', 'əʊ', 'boat'], yoo: ['you', 'juː', 'cube'], oo: ['oo', 'uː', 'moon'],
+    ar: ['ar', 'ɑː', 'car'], or: ['or', 'ɔː', 'fork'], er: ['er', 'ɜː', 'bird'], ow: ['ow', 'aʊ', 'cow'],
+    oy: ['oy', 'ɔɪ', 'boy'],
+  };
+  const SAY_TO_ID = {};
+  Object.keys(PHONEMES).forEach((id) => { SAY_TO_ID[PHONEMES[id][0]] = id; });
+
+  /** Speech text for a sound: a {{id|fallback}} token that plays a recording when one exists. */
+  function soundToken(say) {
+    const id = SAY_TO_ID[say];
+    return id ? `{{${id}|${say}}}` : say;
+  }
+
+  return { LEVELS, LESSONS: lessons, SOUNDS, LONG_VOWEL, PHONEMES, soundOut, wordHasKey, soundToken };
 });

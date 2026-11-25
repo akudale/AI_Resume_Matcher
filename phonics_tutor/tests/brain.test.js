@@ -109,3 +109,25 @@ test('sound out words', () => {
   assert.deepStrictEqual(kite.map((p) => p.say), ['kuh', 'eye', 'tuh', '']);
   assert.ok(kite[3].silent);
 });
+
+test('describe what was different', () => {
+  assert.deepStrictEqual(B.describeMistake(['cap'], 'cat'), { kind: 'close', pos: 'end', index: 2, heard: 'cap' });
+  assert.deepStrictEqual(B.describeMistake(['fun'], 'sun'), { kind: 'close', pos: 'start', index: 0, heard: 'fun' });
+  assert.deepStrictEqual(B.describeMistake(['bit'], 'bat'), { kind: 'close', pos: 'middle', index: 1, heard: 'bit' });
+  assert.strictEqual(B.describeMistake(['the dog'], 'cat').kind, 'other');
+  assert.strictEqual(B.describeMistake([''], 'cat').kind, 'none');
+  assert.strictEqual(B.describeMistake(['i see'], 'I see a cat.').kind, 'sentence');
+});
+
+test('phoneme tokens cover every sound used', () => {
+  L.forEach((l) => l.words.forEach((w) => S.soundOut(w.w, l).forEach((p) => {
+    if (p.say) assert.match(S.soundToken(p.say), /^\{\{[a-z]+\|/, `${p.say} in ${w.w}`);
+  })));
+  assert.strictEqual(Object.keys(S.PHONEMES).length, 40);
+});
+
+test('Pip has a personality', () => {
+  assert.match(B.localAnswer("what's your favourite food", L).text, /Crackers/);
+  assert.match(B.localAnswer('are you a robot', L).text, /pretend parrot/);
+  assert.match(B.localAnswer('what sound does s make', L, (x) => `<${x}>`).tts, /<ssss>/);
+});

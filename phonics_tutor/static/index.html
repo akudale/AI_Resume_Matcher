@@ -97,8 +97,18 @@
           <option value="en-AU">Australian English</option>
         </select>
       </label>
+      <label class="field">Pip's voice <select id="set-voice"></select></label>
+      <label class="field" id="claude-voice-row" hidden>Claude voice style
+        <select id="set-claude-voice">
+          <option value="airy">Airy</option>
+          <option value="buttery">Buttery</option>
+          <option value="glassy">Glassy</option>
+          <option value="rounded">Rounded</option>
+        </select>
+      </label>
+      <p id="voice-note" class="ai-status"></p>
       <label class="field">Talking speed <input id="set-rate" type="range" min="0.6" max="1.2" step="0.05"></label>
-      <label class="check"><input id="set-auto" type="checkbox"> Listen automatically after each question</label>
+      <label class="check"><input id="set-auto" type="checkbox"> Listen by itself, without tapping (hands-free)</label>
       <label class="check"><input id="set-ai" type="checkbox"> Use the AI brain for open questions</label>
       <p id="ai-status" class="ai-status"></p>
       <div class="voice-help">

@@ -208,8 +208,44 @@
     return -1;
   }
 
-  /** Answer simple phonics questions without the AI server. Returns {text, tts} or null. */
-  function localAnswer(text, lessons) {
+  const FILLER = new Set(['the', 'a', 'an', 'i', 'its', 'it', 'is', 'um', 'uh', 'er', 'say', 'said', 'like', 'and', 'oh']);
+
+  /**
+   * How close was the child to the target word, and where did it differ?
+   * Returns {kind: 'close', pos: 'start'|'middle'|'end', index, heard} | {kind: 'other', heard}
+   *       | {kind: 'none'} | {kind: 'sentence'}.
+   */
+  function describeMistake(alts, target) {
+    const tt = toks(target);
+    if (tt.length !== 1) return { kind: 'sentence' };
+    const t = tt[0];
+    const all = [].concat(alts || []).map(toks);
+    let best = null;
+    all.forEach((ws) => ws.filter((w) => !FILLER.has(w) || w === t).forEach((w) => {
+      const d = lev(w, t);
+      if (!best || d < best.d) best = { w, d };
+    }));
+    if (!best) {
+      const first = (all[0] || []).join(' ');
+      return first ? { kind: 'other', heard: first } : { kind: 'none' };
+    }
+    const h = best.w;
+    if (best.d === 0) return { kind: 'none' };
+    if (best.d > Math.max(1, Math.floor(t.length / 2))) return { kind: 'other', heard: (all[0] || [h]).slice(0, 4).join(' ') };
+    let index;
+    if (h[0] !== t[0]) index = 0;
+    else if (h.length === t.length) {
+      index = [...t].findIndex((c, i) => c !== h[i]);
+    } else if (h[h.length - 1] !== t[t.length - 1]) index = t.length - 1;
+    else index = [...t].findIndex((c, i) => c !== h[i]);
+    if (index < 0) index = t.length - 1;
+    const pos = index === 0 ? 'start' : index === t.length - 1 ? 'end' : 'middle';
+    return { kind: 'close', pos, index, heard: h };
+  }
+
+  /** Answer simple phonics questions without the AI server. Returns {text, tts} or null.
+   *  `tok(say)` turns a sound into speech text (e.g. a recorded-sound token). */
+  function localAnswer(text, lessons, tok = (x) => x) {
     const n = normalize(text);
     let m = n.match(/what (?:sound|noise) (?:does|do) (?:the )?(?:letters? )?(.+?) (?:make|say|says|makes)\b/)
       || n.match(/what (?:does|do) (?:the )?(?:letters? )?(.+?) (?:say|sound like)\b/)
@@ -219,7 +255,7 @@
       if (l && l.say && l.words.length) {
         const name = l.type === 'letter' ? l.keys[0].toUpperCase() : l.display;
         const ex = l.words[0].w;
-        return { text: `${name} says /${l.say}/, like in ${ex} ${l.words[0].e}`, tts: `${name} says ${l.say}. ${l.say}. Like in ${ex}!` };
+        return { text: `${name} says /${l.say}/, like in ${ex} ${l.words[0].e}`, tts: `${name} says ${tok(l.say)}. ${tok(l.say)}. Like in ${ex}!` };
       }
     }
     m = n.match(/how (?:do (?:you|i)|to) spell (?:the word )?([a-z]+)/);
@@ -239,6 +275,12 @@
     if (/\b(who are you|whats your name|what is your name)\b/.test(n)) {
       return { text: "I'm Pip the Phonics Parrot! 🦜 I love letters and sounds!", tts: "I'm Pip the Phonics Parrot! I love letters and sounds!" };
     }
+    if (/\b(favou?rite food|like to eat|what do you eat|hungry)\b/.test(n)) return { text: 'Crackers! Crunchy crackers! Crackers starts with k, k, k! 🦜' };
+    if (/\b(favou?rite colou?r)\b/.test(n)) return { text: 'Green, like my feathers! Green starts with g, g, g! 💚' };
+    if (/\b(are you real|are you a robot|are you a computer)\b/.test(n)) return { text: "I'm a pretend parrot who lives in this screen. But I really love learning sounds with you! 🦜" };
+    if (/\b(where do you live)\b/.test(n)) return { text: 'I live in a cosy nest inside this screen, with lots of letters! 🪺' };
+    if (/\b(i love you|i like you|you are my friend|be my friend)\b/.test(n)) return { text: "Aww! I like you too! You're my favourite reading buddy! 💚" };
+    if (/\b(can you fly)\b/.test(n)) return { text: 'Only in my imagination! Whoosh! Fly starts with f, f, f! 🦜' };
     if (/\bhow are you\b/.test(n)) return { text: "I'm super happy! Learning sounds with you is my favourite thing! 🦜" };
     if (/\bhow old are you\b/.test(n)) return { text: "I'm a parrot, so I'm 5 in parrot years! 🦜" };
     if (/\b(what can you do|what can i say|how does this work)\b/.test(n)) {
@@ -260,5 +302,5 @@
     return name.charAt(0).toUpperCase() + name.slice(1);
   }
 
-  return { normalize, lev, parseIntent, findLesson, matchAnswer, matchOption, localAnswer, parseName, LETTER_NAMES };
+  return { normalize, lev, parseIntent, findLesson, matchAnswer, matchOption, localAnswer, parseName, describeMistake, LETTER_NAMES };
 });

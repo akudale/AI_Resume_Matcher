@@ -17,6 +17,28 @@ You can also skip the server and open `static/index.html` directly. Everything w
 Listening needs a browser that has speech recognition (Chrome, Edge or Safari). In other browsers,
 children can tap the answers and grown-ups can type.
 
+## What makes Pip feel like a real tutor
+
+- **A natural voice.** On the published claude.ai page Pip uses Claude's voice. When run locally, Pip picks the most human voice on the device, preferring the "Natural" / "Online" voices in Edge and Chrome. Grown-ups can choose a voice in ⚙️ settings.
+- **Real recorded letter sounds.** Each of the 40 phonics sounds plays from a recording in `static/sounds/` when one is there, and falls back to the voice when not (see below).
+- **Hands-free.** Pip listens by itself after every question; it never listens while it is talking, so it doesn't hear itself. On the published page, Claude's voice and the microphone can't be on together, so with that voice the child taps the orange button to answer.
+- **Patient when the child is quiet.** After 10 seconds: "Take your time!" After 22: Pip shows how. After 40: "I'll wait right here."
+- **Feedback like a teacher.** *"You said **fun**! So close! **Sun** starts with **sss**."* Pip points out whether the start, middle or end sound was different.
+- **Memory.** *"Welcome back, Maya! Yesterday you learned the letter D. That's 3 days in a row! Remember D? That one was tricky."*
+- **Personality.** Praise varies (and celebrates "three in a row!" or trying again), Pip sometimes gets a picture wrong on purpose so the child can correct it, and it has a favourite food (crackers).
+
+## Adding the sound recordings
+
+Pip needs one short clip per sound, named by the sound's id:
+
+```bash
+python build_sounds.py --list     # the 40 ids, e.g. s.mp3 /s/ as in sun, sh.mp3 /ʃ/ as in ship
+# copy the clips into static/sounds/, then:
+python build_sounds.py            # writes static/sounds/manifest.json
+```
+
+Clips can be added a few at a time; any sound without one is spoken by the voice.
+
 ## How a lesson works
 
 Each lesson has 4 steps, shown at the top of the screen:
@@ -71,6 +93,8 @@ Keyboard: ← and → change lessons, Space starts listening.
 ```
 phonics_tutor/
 ├── server.py            FastAPI: serves the app + /api/chat (Claude) + /api/health
+├── build_sounds.py      registers recordings in static/sounds/
+├── build_page.py        bundles the app into one page for publishing on claude.ai
 ├── static/
 │   ├── index.html       UI
 │   ├── styles.css
