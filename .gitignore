@@ -9,3 +9,4 @@ frontend/node_modules
 
 # Phonics tutor
 phonics_tutor/__pycache__/
+phonics_tutor/dist/

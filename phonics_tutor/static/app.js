@@ -6,6 +6,9 @@
   const $ = (s) => document.querySelector(s);
   const STORE_KEY = 'pip-phonics-v1';
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  // When Pip runs as a published claude.ai page, the platform can provide
+  // dictation (listening) and Claude (answering questions). Both are optional.
+  const platform = { dictation: null, sample: null };
 
   // ---------------------------------------------------------------- state
   const state = {
@@ -153,7 +156,8 @@
     hurry = false;
     return new Promise((resolve) => {
       waiter = resolve;
-      if (state.settings.autoListen && !listening) autoListen(t, resolve);
+      if (platform.dictation) nudgeMic(true); // dictation must start from a tap
+      else if (state.settings.autoListen && !listening) autoListen(t, resolve);
     });
   }
 
@@ -275,6 +279,7 @@
   async function answerQuestion(text, t) {
     const local = Brain.localAnswer(text, LESSONS);
     if (local) { await say(local.text, local.tts); return false; }
+    if (platform.sample && state.settings.aiChat) return askClaude(text, t);
     if (!(state.ai && state.settings.aiChat)) {
       await say("Ooh, what a great question! Let's ask a grown-up about that one. Now, back to our sounds! 🦜");
       return false;
@@ -773,6 +778,7 @@
     };
     $('#mic').onclick = () => {
       nudgeMic(false);
+      if (platform.dictation) { toggleDictation(); return; }
       if (listening) { stopListening(); return; }
       if (!SR) { $('#typed').focus(); toast('Voice listening needs Chrome, Edge or Safari. You can type instead!'); return; }
       if (!waiter) { hurry = true; cancelSpeech(); }
@@ -808,8 +814,16 @@
     $('#set-rate').oninput = (e) => { state.settings.rate = +e.target.value; save(); };
     $('#set-auto').onchange = (e) => { state.settings.autoListen = e.target.checked; save(); };
     $('#set-ai').onchange = (e) => { state.settings.aiChat = e.target.checked; save(); };
+    let resetArmed = false;
     $('#set-reset').onclick = () => {
-      if (!confirm('Reset all progress, stars and name?')) return;
+      if (!resetArmed) {
+        resetArmed = true;
+        $('#set-reset').textContent = 'Tap again to erase all progress';
+        setTimeout(() => { resetArmed = false; $('#set-reset').textContent = 'Reset all progress'; }, 4000);
+        return;
+      }
+      resetArmed = false;
+      $('#set-reset').textContent = 'Reset all progress';
       state.progress = {}; state.idx = 0; state.name = ''; save();
       $('#set-name').value = '';
       renderDrawer(); renderStars();
@@ -824,13 +838,100 @@
     });
   }
 
+  // ---------------------------------------------------------------- claude.ai page hooks
+  let dictText = '';
+  function setupDictation(d) {
+    platform.dictation = d;
+    $('#no-sr').hidden = true;
+    d.onPartial(({ text }) => { if (text) showHeard((dictText + ' ' + text).trim(), true); });
+    d.onFinal(({ text }) => {
+      dictText = `${dictText} ${text}`.trim();
+      if (dictText) d.stop().catch(() => {}); // one phrase is one answer
+    });
+    d.onState(({ state: st, reason }) => {
+      setListening(st === 'starting' || st === 'listening');
+      if (st !== 'idle') return;
+      const said = dictText.trim();
+      dictText = '';
+      if (said) deliver({ alts: [said], text: said, source: 'voice' });
+      if (reason === 'not_granted') toast('The microphone is off for this page. You can tap and type instead!');
+      else if (reason === 'unavailable') { platform.dictation = null; toast('Listening is not available here. You can tap and type instead!'); }
+      else if (reason === 'rate_limited' || reason === 'upstream_error') toast('I could not hear that. Tap the 🎤 and try again!');
+    });
+  }
+  function toggleDictation() {
+    const d = platform.dictation;
+    if (d.active()) { d.stop().catch(() => {}); return; }
+    if (!waiter) hurry = true;
+    cancelSpeech();
+    dictText = '';
+    d.start().catch((e) => {
+      if (e && e.code === 'not_granted') toast('The microphone is off for this page. You can tap and type instead!');
+      else if (e && e.code === 'unavailable') { platform.dictation = null; toast('Listening is not available here. You can tap and type instead!'); }
+    });
+  }
+
+  async function askClaude(text, t) {
+    setThinking(true);
+    const lesson = lessonOf(state.idx);
+    const history = state.chat.slice(-6).map((m) => `${m.role === 'user' ? 'Child' : 'Pip'}: ${m.content}`).join('\n');
+    const prompt = [
+      'You are Pip, a cheerful parrot who teaches English phonics to children aged 4 to 5.',
+      'Your reply is read aloud by a text-to-speech voice to a young child.',
+      'Reply in 1 to 3 very short sentences with simple words. Be warm and encouraging. At most one emoji. No lists, links or markdown.',
+      'Write letter sounds so they can be spoken, e.g. "s says ssss, like in sun".',
+      'Stay safe and age-appropriate: for anything scary, grown-up or unsafe, kindly suggest asking a grown-up and steer back to sounds.',
+      'If the question is off-topic, answer in one tiny sentence, then invite the child back to the lesson.',
+      'If the child asks to learn a particular sound, letter, level or lesson, or an easier/harder one, set "goto" to the best lesson number below; otherwise null.',
+      '',
+      `Syllabus:\n${LESSONS.map((l) => `${l.num}: ${l.title} (level ${l.level})`).join('\n')}`,
+      '',
+      `The child is on lesson ${lesson.num}: ${lesson.title}. Words: ${lesson.words.map((w) => w.w).join(', ')}.`,
+      state.name ? `The child's name is ${state.name}.` : '',
+      history ? `Recent chat:\n${history}` : '',
+      '',
+      `The child just said: "${text}"`,
+      '',
+      'Answer with only JSON: {"reply": "<what Pip says>", "goto": <lesson number or null>}',
+    ].join('\n');
+    try {
+      const data = await platform.sample.json(prompt, { modelTier: 'quick', cache: false });
+      setThinking(false);
+      if (t !== run) return true;
+      const reply = data && typeof data.reply === 'string' ? data.reply.slice(0, 400) : '';
+      const goto = data && Number.isInteger(data.goto) ? data.goto : null;
+      state.chat.push({ role: 'user', content: text }, { role: 'assistant', content: reply });
+      if (reply) await say(reply);
+      if (goto && goto >= 1 && goto <= LESSONS.length && t === run) { startLesson(goto - 1); return true; }
+      return false;
+    } catch (e) {
+      setThinking(false);
+      if (e && e.code === 'not_granted') { platform.sample = null; aiStatus(); }
+      await say("Hmm, my thinking cap fell off! Let's keep learning sounds. 🦜");
+      return false;
+    }
+  }
+
+  function aiStatus() {
+    const on = state.ai || !!platform.sample;
+    $('#ai-status').textContent = on ? '🟢 AI brain connected — Pip can answer any question.'
+      : '⚪ AI brain off — Pip answers phonics questions only. Run server.py with ANTHROPIC_API_KEY to turn it on.';
+  }
+
+  function connectPlatform() {
+    const c = window.claude;
+    if (!c || typeof c.use !== 'function') return;
+    c.use('dictation').then((d) => { if (d) setupDictation(d); }).catch(() => {});
+    c.use('sample').then((sm) => { if (sm) { platform.sample = sm; aiStatus(); } }).catch(() => {});
+  }
+
   async function checkAI() {
     try {
       const r = await fetch('api/health');
       const d = await r.json();
       state.ai = !!d.ai;
     } catch (e) { state.ai = false; }
-    $('#ai-status').textContent = state.ai ? '🟢 AI brain connected — Pip can answer any question.' : '⚪ AI brain off — Pip answers phonics questions only. Run server.py with ANTHROPIC_API_KEY to turn it on.';
+    aiStatus();
   }
 
   load();
@@ -841,6 +942,7 @@
   showBubble(state.name ? `Welcome back, ${state.name}! Tap "Let's Play" to start.` : 'Hi! Tap "Let\'s Play" to start!');
   if (!SR) $('#no-sr').hidden = false;
   checkAI();
+  connectPlatform();
 
   // exposed for automated tests
   window.__pip = { state, startLesson, deliver, LESSONS };
